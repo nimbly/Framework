@@ -1,0 +1,50 @@
+name: Test
+
+on:
+  - push
+  - pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "8.2"
+        coverage: pcov
+
+    - name: Validate dependencies
+      run: composer validate --strict
+
+    - name: Audit dependencies
+      run: composer audit
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run static analysis
+      run: vendor/bin/psalm
+
+    - name: Run test suite
+      uses: php-actions/phpunit@v3
+      with:
+        configuration: phpunit.xml
+        coverage_clover: build/tests/clover.xml
+
+    # - uses: codecov/codecov-action@v4
+    #   env:
+    #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    #   with:
+    #     files: ./build/logs/clover.xml
+    #     #flags: unittests # optional
+    #     #name: codecov-umbrella # optional
+    #     #fail_ci_if_error: true # optional (default = false)
+    #     #verbose: true # optional (default = false)

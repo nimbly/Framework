@@ -1,0 +1,125 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "service",
+		"description": "service description",
+		"version": "1.0"
+	},
+	"components": {
+		"responses": {
+			"DefaultError": {
+				"description": "Refer to error message for details",
+				"content": {
+					"application/json": {
+						"schema": {
+							"type": "object",
+							"properties": {
+								"code": {
+									"type": "integer",
+									"format": "int32"
+								},
+
+								"message": {
+									"type": "string",
+									"maxLength": 256,
+									"description": "End user friendly error message."
+								},
+
+								"debug": {
+									"type": "object",
+									"description": "The debug object is only included when the application is running in debug mode.",
+									"properties": {
+										"message": {
+											"type": "string",
+											"maxLength": 1024,
+											"description": "Developer friendly error message."
+										},
+
+										"file": {
+											"type": "string",
+											"maxLength": 256,
+											"description": "File exception occured in."
+										},
+
+										"line": {
+											"type": "integer",
+											"format": "int32",
+											"minimum": 0,
+											"description": "Line number if file exception occured in."
+										},
+
+										"trace": {
+											"type": "string",
+											"maxLength": 131072,
+											"description": "Full stack trace of exception."
+										},
+
+										"details": {
+											"type": "array",
+											"description": "If the request failed to validate against the schema, this property will contain additional details.",
+											"items": {
+												"type": "object",
+												"properties": {
+													"message": {
+														"type": "string",
+														"maxLength": 128
+													},
+
+													"location": {
+														"type": "string",
+														"maxLength": 128
+													},
+
+													"data": {}
+												}
+											}
+										}
+									},
+									"additionalProperties": false,
+									"required": ["message", "file", "line", "trace"]
+								}
+							},
+							"additionalProperties": false,
+							"required": ["code", "message"]
+						}
+					}
+				}
+			}
+		},
+		"schemas": {
+
+		}
+	},
+	"paths": {
+		"/heartbeat": {
+			"get": {
+				"operationId": "getHeartbeat",
+				"summary": "Get service heartbeat.",
+				"description": "Get the service heartbeat that should return a successful response if the server is still running.",
+				"responses": {
+					"200": {
+						"description": "Success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"status": {
+											"type": "string",
+											"enum": ["Ok"]
+										}
+									},
+									"required": ["status"]
+								}
+							}
+						}
+					},
+
+					"default": {
+						"$ref": "#/components/responses/DefaultError"
+					}
+				}
+			}
+		}
+	}
+}
