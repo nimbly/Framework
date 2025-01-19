@@ -5,34 +5,34 @@ return [
 	 * Adapter to use for the publisher.
 	 *
 	 * Options are:
-	 * 	azure, beanstalkd, google, ironmq, mock, mqtt, rabbitmq, redis_queue, redis_pubsub, sns, sqs
+	 * 	azure, beanstalkd, google, ironmq, mock, mqtt, rabbitmq, redis, redis_pubsub, sns, sqs
 	 */
-	"adapter" => \getenv("PUBLISHER_ADAPTER"),
+	"adapter" => \env("PUBLISHER_ADAPTER"),
 
 	/**
 	 * Some publishers use a host setting.
 	 */
-	"host" => \getenv("PUBLISHER_HOST"),
+	"host" => \env("PUBLISHER_HOST"),
 
 	/**
 	 * Some publishers use a port number.
 	 */
-	"port" => \getenv("PUBLISHER_PORT"),
+	"port" => \env("PUBLISHER_PORT"),
 
 	/**
 	 * Additional settings for SNS.
 	 */
 	"sns" => [
-		"region" => \getenv("SNS_REGION"),
-		"version" => \getenv("SNS_VERSION"),
+		"region" => \env("SNS_REGION"),
+		"version" => \env("SNS_VERSION"),
 	],
 
 	/**
 	 * Additional settings for SQS.
 	 */
 	"sns" => [
-		"region" => \getenv("SQS_REGION"),
-		"version" => \getenv("SQS_VERSION"),
+		"region" => \env("SQS_REGION"),
+		"version" => \env("SQS_VERSION"),
 	],
 
 	/**
@@ -41,7 +41,7 @@ return [
 	 * `connection_string` is required to connect to Azure.
 	 */
 	"azure" => [
-		"connection_string" => \getenv("AZURE_CONNECTION_STRING"),
+		"connection_string" => \env("AZURE_CONNECTION_STRING"),
 	],
 
 	/**
@@ -50,20 +50,20 @@ return [
 	 * `token` and `project_id` are required in order to connect to IronMQ.
 	 */
 	"ironmq" => [
-		"token" => \getenv("IRONMQ_TOKEN"),
-		"project_id" => \getenv("IRONMQ_PROJECT_ID"),
-		"protocol" => \getenv("IRONMQ_PROTOCOL"),
-		"api_version" => \getenv("IRONMQ_API_VERSION"),
-		"encryption_key" => \getenv("IRONMQ_ENCRYPTION_KEY"),
+		"token" => \env("IRONMQ_TOKEN"),
+		"project_id" => \env("IRONMQ_PROJECT_ID"),
+		"protocol" => \env("IRONMQ_PROTOCOL"),
+		"api_version" => \env("IRONMQ_API_VERSION"),
+		"encryption_key" => \env("IRONMQ_ENCRYPTION_KEY"),
 	],
 
 	/**
 	 * Additional settings for RabbitMQ.
 	 */
 	"rabbitmq" => [
-		"username" => \getenv("RABBITMQ_USERNAME"),
-		"password" => \getenv("RABBITMQ_PASSWORD"),
-		"keepalive" => \getenv("RABBITMQ_KEEPALIVE"),
+		"username" => \env("RABBITMQ_USERNAME"),
+		"password" => \env("RABBITMQ_PASSWORD"),
+		"keepalive" => \env("RABBITMQ_KEEPALIVE"),
 	],
 
 	/**
@@ -72,7 +72,7 @@ return [
 	 * These settings are optional and not required.
 	 */
 	"mqtt" => [
-		"client_id" => \getenv("MQTT_CLIENT_ID"),
-		"protocol" => \getenv("MQTT_PROTOCOL"),
+		"client_id" => \env("MQTT_CLIENT_ID"),
+		"protocol" => \env("MQTT_PROTOCOL"),
 	]
 ];

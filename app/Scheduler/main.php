@@ -2,13 +2,15 @@
 
 use Nimbly\Foundation\Core\Log;
 use GO\Scheduler;
+use Nimbly\Carton\Container;
 
+/**
+ * @var Container $container
+ */
 $container = require __DIR__ . "/../../bootstrap.php";
 
-Log::info("• Registering Scheduler providers");
-$container->register(
-	\config("scheduler.providers")
-);
+Log::info("• Registering scheduler providers");
+$container->register(\config("scheduler.providers"));
 
 Log::info("• Running scheduled tasks");
 try {

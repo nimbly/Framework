@@ -3,9 +3,44 @@
 return [
 
 	/**
-	 * OpenAPI schema to be used to validate requests and responses.
+	 * OpenAPI schema and validation options.
 	 */
-	"schema" => APP_ROOT . "/openapi.json",
+	"schema" => [
+
+		/**
+		 * Enable request and response validation against your schema.
+		 *
+		 * Alternatively, you can comment out or remove `Nimbly\Foundation\Http\Middleware\SchemaValidatorMiddleware::class`
+		 * from the `middleware` configuration below and `Nimbly\Foundation\Http\Providers\SchemaValidatorProvider::class`
+		 * from the `providers` configuration below.
+		 */
+		"enabled" => true,
+
+		/**
+		 * Your OpenAPI schema file.
+		 */
+		"file" => APP_ROOT . "/openapi.json",
+
+		/**
+		 * Schema caching options.
+		 */
+		"cache" => [
+			/**
+			 * Enable or disable schema cache.
+			 */
+			"enabled" => true,
+
+			/**
+			 * Cache key to use for schema.
+			 */
+			"key" => \config("app.name") . "/" . \config("app.version"),
+
+			/**
+			 * Schema cache TTL (in seconds.)
+			 */
+			"ttl" => 86400 // 24 hours
+		]
+	],
 
 	/**
 	 * HTTP server configurations.
@@ -21,21 +56,21 @@ return [
 		 *
 		 * Defaults to "0.0.0.0:8000"
 		 */
-		"listen" => \getenv("HTTP_LISTEN") ?: "0.0.0.0:8000",
+		"listen" => \env("HTTP_LISTEN", "0.0.0.0:8000"),
 
 		/**
 		 * The maximum number of concurrent connections allowed.
 		 *
 		 * Defaults to 64.
 		 */
-		"max_connections" => \getenv("HTTP_MAX_CONNECTIONS") ?: 64,
+		"max_connections" => \env("HTTP_MAX_CONNECTIONS", 64),
 
 		/**
 		 * The maximum request size in bytes.
 		 *
 		 * Defaults to 1MB.
 		 */
-		"max_request_size" => \getenv("HTTP_MAX_REQUEST_SIZE") ?: 1048576,
+		"max_request_size" => \env("HTTP_MAX_REQUEST_SIZE", 1048576),
 
 		/**
 		 * Interrupt signals that will initiate a graceful shutdown.
@@ -70,8 +105,6 @@ return [
 	 */
 	"default_error_message" => "There was an issue processing your request.",
 
-
-
 	/**
 	 * Global middleware to be applied to *all* incoming HTTP requests.
 	 */
@@ -79,7 +112,7 @@ return [
 		Nimbly\Foundation\Http\Middleware\RequestLoggerMiddleware::class,
 		Nimbly\Foundation\Http\Middleware\JsonMiddleware::class,
 		Nimbly\Foundation\Http\Middleware\ValidateJwtMiddleware::class,
-		Nimbly\Foundation\Http\Middleware\OpenApiValidatorMiddleware::class,
+		Nimbly\Foundation\Http\Middleware\SchemaValidatorMiddleware::class,
 		Nimbly\Foundation\Http\Middleware\ServerHeaderMiddleware::class,
 	],
 

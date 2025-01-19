@@ -26,7 +26,7 @@ return [
 	 *
 	 * JWT_HMAC_SECRET
 	 */
-	"signer" => \getenv("JWT_SIGNER"),
+	"signer" => \env("JWT_SIGNER"),
 
 	/**
 	 * The signing algorithm to use.

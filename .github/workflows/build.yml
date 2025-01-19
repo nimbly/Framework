@@ -8,17 +8,40 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build image
+    name: Build images
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Build and push
+      - name: Build HTTP image
         uses: docker/build-push-action@v6
         with:
+          file: docker/Http.Dockerfile
           build-args: |
             VERSION=${{ github.ref_name }}
           push: true
           tags: |
-            1234567890.dkr.ecr.us-east-2.amazonaws.com/service:${{ github.ref_name }}
-            1234567890.dkr.ecr.us-east-2.amazonaws.com/service:latest
+            1234567890.dkr.ecr.us-east-2.amazonaws.com/api:${{ github.ref_name }}
+            1234567890.dkr.ecr.us-east-2.amazonaws.com/api:latest
+
+      - name: Build consumer image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/Consumer.Dockerfile
+          build-args: |
+            VERSION=${{ github.ref_name }}
+          push: true
+          tags: |
+            1234567890.dkr.ecr.us-east-2.amazonaws.com/consumer:${{ github.ref_name }}
+            1234567890.dkr.ecr.us-east-2.amazonaws.com/consumer:latest
+
+      - name: Build scheduler image
+        uses: docker/build-push-action@v6
+        with:
+          file: docker/Scheduler.Dockerfile
+          build-args: |
+            VERSION=${{ github.ref_name }}
+          push: true
+          tags: |
+            1234567890.dkr.ecr.us-east-2.amazonaws.com/scheduler:${{ github.ref_name }}
+            1234567890.dkr.ecr.us-east-2.amazonaws.com/scheduler:latest

@@ -17,7 +17,7 @@ return [
 	 */
 	"version" => \file_exists(APP_ROOT . "/VERSION") ?
 		\file_get_contents(APP_ROOT . "/VERSION") :
-		(\getenv("ENV") ?: "unknown"),
+		\env("ENV", "unknown"),
 
 	/**
 	 * Default timezone to run application in. All date related PHP functions, logging, and
@@ -27,16 +27,17 @@ return [
 	 *
 	 * @see https://www.php.net/manual/en/timezones.php
 	 */
-	"timezone" => \getenv("TIMEZONE") ?: "UTC",
+	"timezone" => \env("TIMEZONE", "UTC"),
 
 	/**
 	 * Enable or disable debug mode for the application.
 	 *
+	 * CAUTION:
 	 * Debug mode will include extra logging information as well as additional information
 	 * in HTTP error responses - including a full stack trace. Due to the sensitive nature of
 	 * enabling debug mode, you SHOULD NOT enable this for production environments.
 	 */
-	"debug" => \getenv("DEBUG") ?: "false",
+	"debug" => \env("DEBUG", false, "bool"),
 
 	/**
 	 * Global service providers to register into the dependency container.
@@ -50,19 +51,22 @@ return [
 	 * this list of providers.
 	 */
 	"providers" => [
+		App\Core\Providers\DatabaseProvider::class,
 		Nimbly\Foundation\Core\Providers\LoggerProvider::class,
 		Nimbly\Foundation\Core\Providers\CacheProvider::class,
+		Nimbly\Foundation\Core\Providers\FilesystemProvider::class,
+		//Nimbly\Foundation\Core\Providers\DatabaseProvider::class,
 		Nimbly\Foundation\Core\Providers\EventProvider::class,
 		Nimbly\Foundation\Core\Providers\PublisherProvider::class,
-
-		//Nimbly\Foundation\Core\Providers\DatabaseProvider::class,
-		//Nimbly\Foundation\Core\Providers\MigrationProvider::class,
 	],
 
+	/**
+	 * Commands to register with the console.
+	 */
 	"commands" => [
+		"setup" => Nimbly\Foundation\Commands\Setup::class,
 		"jwt:hmac" => Nimbly\Foundation\Commands\JwtHmac::class,
 		"jwt:keypair" => Nimbly\Foundation\Commands\JwtKeypair::class,
 		"shell" => Nimbly\Foundation\Commands\Shell::class,
-		"setup" => Nimbly\Foundation\Commands\Setup::class,
 	]
 ];

@@ -21,11 +21,11 @@ jobs:
         php-version: "8.2"
         coverage: pcov
 
-    - name: Audit dependencies
-      run: composer audit
-
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+
+    - name: Audit dependencies
+      run: composer audit
 
     - name: Run static analysis
       run: vendor/bin/psalm
@@ -36,7 +36,8 @@ jobs:
         configuration: phpunit.xml
         coverage_clover: build/tests/clover.xml
 
-    # - uses: codecov/codecov-action@v4
+    # - name: Update code coverage report
+    #   uses: codecov/codecov-action@v4
     #   env:
     #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     #   with:

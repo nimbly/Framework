@@ -429,3 +429,11 @@ class RegistrationSubscriber
 ### Registering subscribers
 
 In order for your subscriber to be added to the list of listening subscribers, add it to the `event.subscribers` configuration found in `config/event.php`.
+
+## Docker
+
+Multiple working sample Dockerfiles are provided to build your application.
+
+```bash
+docker build -f docker/Http.Dockerfile --build-arg VERSION=1.12.29 -t service-api:1.12.29 .
+```

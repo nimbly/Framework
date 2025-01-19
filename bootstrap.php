@@ -4,7 +4,9 @@ use Dotenv\Dotenv;
 use Nimbly\Caboodle\Config;
 use Nimbly\Caboodle\Loaders\FileLoader;
 use Nimbly\Carton\Container;
+use Nimbly\Foundation\Core\Cache;
 use Nimbly\Foundation\Core\Log;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 
 \defined("APP_ROOT") or \define("APP_ROOT", __DIR__);
@@ -44,5 +46,10 @@ $container->register($config->get("app.providers"));
  * Initialize the global logger class.
  */
 Log::init($container->get(LoggerInterface::class));
+
+/**
+ * Initialize the global cache class.
+ */
+Cache::init($container->get(CacheItemPoolInterface::class));
 
 return $container;

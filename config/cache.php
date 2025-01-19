@@ -3,25 +3,41 @@
 return [
 
 	/**
-	 * Options:
+	 * Cache adapter to use.
 	 *
-	 * apcu, redis, memory, file, null, pdo
+	 * Options: redis, memory, file, pdo, apcu, memcache, null
 	 */
-	"adapter" => \getenv("CACHE_ADAPTER") ?: "file",
+	"adapter" => \env("CACHE_ADAPTER", "file"),
+
+	/**
+	 * The default TTL for cache items if none is provided when
+	 * adding to the cache.
+	 */
+	"default_ttl" => 0,
 
 	/**
 	 * Connection or host string (used for redis and pdo).
 	 */
-	"connection" => \getenv("CACHE_CONNECTION") ?: null,
+	"connection" => \env("CACHE_CONNECTION"),
 
 	/**
 	 * For file based caching, the directory to write cache files to.
 	 */
-	"directory" => \realpath(\getenv("CACHE_DIRECTORY")) ?: APP_ROOT . "/storage/cache",
+	"path" => \realpath(\env("CACHE_PATH", "storage/cache")),
 
 	/**
 	 * Namespace for cache items.
 	 */
-	"namespace" => \getenv("CACHE_NAMESPACE"),
+	"namespace" => \env("CACHE_NAMESPACE"),
 
+	/**
+	 * A custom marshaller for your cache items.
+	 *
+	 * This instance must implement `Symfony\Component\Cache\Marshaller\MarshallerInterface`.
+	 * Optionally you may add your custom marshaller to the dependecy container, keyed as
+	 * `Symfony\Component\Cache\Marshaller\MarshallerInterface`.
+	 *
+	 * Defaults to Symfony's `DefaultMarshaller`.
+	 */
+	"marshaller" => null,
 ];

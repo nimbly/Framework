@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
          executionOrder="depends,defects"
-         shortenArraysForExportThreshold="10"
          requireCoverageMetadata="true"
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
@@ -19,9 +18,22 @@
         </testsuite>
     </testsuites>
 
-    <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
+    <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
             <directory>app</directory>
         </include>
     </source>
+
+	<php>
+		<env name="ENV" value="test"/>
+		<env name="DEBUG" value="true"/>
+		<env name="LOG_ENABLED" value="0"/>
+		<env name="DB_ADAPTER" value="memory"/>
+		<env name="JWT_SIGNER" value="hmac"/>
+		<env name="JWT_HMAC_SCRET" value="YWl3OGlGZTZLYWk5Cg"/>
+		<env name="CACHE_ADAPTER" value="memory"/>
+		<env name="FILESYSTEM_ADAPTER" value="memory"/>
+		<env name="PUBLISHER_ADAPTER" value="mock"/>
+		<env name="CONSUMER_ADAPTER" value="mock"/>
+	</php>
 </phpunit>

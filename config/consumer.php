@@ -1,13 +1,15 @@
 <?php
 
+use Nimbly\Foundation\Core\Log;
+use Nimbly\Syndicate\Response;
+
 return [
 	/**
-	 * Adapter to use for the consumer.
+	 * Consumer adapter to use.
 	 *
-	 * Options are:
-	 * 	azure, beanstalkd, google, ironmq, mock, rabbitmq, redis_queue, sqs
+	 * Options: azure, beanstalkd, google, ironmq, mock, rabbitmq, redis, sqs
 	 */
-	"adapter" => \getenv("CONSUMER_ADAPTER"),
+	"adapter" => \env("CONSUMER_ADAPTER"),
 
 	/**
 	 * The message deadletter configuration.
@@ -16,12 +18,12 @@ return [
 		/**
 		 * Adapter to use for the deadletter - options are identical to above.
 		 */
-		"adapter" => \getenv("CONSUMER_DEADLETTER_ADAPTER"),
+		"adapter" => \env("CONSUMER_DEADLETTER_ADAPTER"),
 
 		/**
 		 * The topic or queue name/URL to publish deadletter messages to.
 		 */
-		"topic" => \getenv("CONSUMER_DEADLETTER_TOPIC"),
+		"topic" => \env("CONSUMER_DEADLETTER_TOPIC"),
 	],
 
 	/**
@@ -32,59 +34,74 @@ return [
 	/**
 	 * Some consumers use a host setting.
 	 */
-	"host" => \getenv("CONSUMER_HOST"),
+	"host" => \env("CONSUMER_HOST"),
 
 	/**
 	 * Some consumers use a port number.
 	 */
-	"port" => \getenv("CONSUMER_PORT"),
+	"port" => \env("CONSUMER_PORT"),
 
 	/**
 	 * The topic or queue name/URL to listen to.
 	 */
-	"topic" => \getenv("CONSUMER_TOPIC"),
+	"topic" => \env("CONSUMER_TOPIC"),
 
 	/**
 	 * Additional settings for IronMQ
 	 */
 	"ironmq" => [
-		"token" => \getenv("IRONMQ_TOKEN"),
-		"project_id" => \getenv("IRONMQ_PROJECT_ID"),
-		"protocol" => \getenv("IRONMQ_PROTOCOL"),
-		"api_version" => \getenv("IRONMQ_API_VERSION"),
-		"encryption_key" => \getenv("IRONMQ_ENCRYPTION_KEY"),
+		"token" => \env("IRONMQ_TOKEN"),
+		"project_id" => \env("IRONMQ_PROJECT_ID"),
+		"protocol" => \env("IRONMQ_PROTOCOL"),
+		"api_version" => \env("IRONMQ_API_VERSION"),
+		"encryption_key" => \env("IRONMQ_ENCRYPTION_KEY"),
 	],
 
 	/**
 	 * Additional settings for RabbitMQ
 	 */
 	"rabbitmq" => [
-		"user" => \getenv("RABBITMQ_USERNAME"),
-		"password" => \getenv("RABBITMQ_PASSWORD"),
-		"keepalive" => \getenv("RABBITMQ_KEEPALIVE"),
+		"user" => \env("RABBITMQ_USERNAME"),
+		"password" => \env("RABBITMQ_PASSWORD"),
+		"keepalive" => \env("RABBITMQ_KEEPALIVE"),
 	],
 
 	/**
 	 * Additional settings for Redis
 	 */
 	"redis" => [
-		"read_write_timeout" => 0,
+		"parameters" => [
+			"read_write_timeout" => 0,
+		],
+
+		"options" => []
 	],
 
 	/**
 	 * Additional settings for SQS
 	 */
 	"sqs" => [
-		"region" => \getenv("SQS_REGION"),
-		"version" => \getenv("SQS_VERSION"),
+		"region" => \env("SQS_REGION"),
+		"version" => \env("SQS_VERSION"),
 	],
 
 	/**
-	 * Routes for consumed messages.
+	 * All consumer handler classes.
+	 *
+	 * These classes are assumed to have one or more public methods
+	 * tagged with the #[Consume] attribute.
 	 */
-	"routes" => [
-		"UserCreated" => "App\\Http\\Consumer\\Handlers\\UsersHandler@onUserCreated"
+	"handlers" => [
+		App\Consumer\Handlers\UsersHandler::class,
 	],
+
+	/**
+	 * The default message handler if no route could be resolved.
+	 */
+	"default_handler" => function(): Response {
+		Log::warning("Message could not be routed to consumer handler. Sending to deadletter.");
+		return Response::deadletter;
+	},
 
 	/**
 	 * Providers for consumer
